@@ -2,7 +2,7 @@
 
 In this repository, we reproduce results from the paper by Carrasquilla and Melko titled [Machine learning phases of matter](https://www.nature.com/articles/nphys4035).
 
-Ferromagnetic Ising lattices are generated using the Metropolis algorithm for a variety of temperatures. A convolutional neural network is then trained directly on the spin configuration of the lattices and their corresponding phase.
+Ferromagnetic Ising lattices are generated using the Metropolis algorithm for a variety of temperatures. A convolutional neural network is then trained directly on the spin configurations of the lattices and their corresponding phases.
 
 ## Structure
 
@@ -18,8 +18,7 @@ The project is organized as follows:
 │   │   ├── L20/
 │   │   ├── L30/
 │   │   ├── L40/
-│   │   ├── L60/
-│   │   └── L100/
+│   │   └── L60/
 │   ├── triangular/ # Triangular lattices
 │   │   ├── L10/ 
 │   │   │   └── lattices.pt
@@ -28,8 +27,7 @@ The project is organized as follows:
 │   │   ├── L20/
 │   │   ├── L30/
 │   │   ├── L40/
-│   │   ├── L60/
-│   │   └── L100/
+│   │   └── L60/
 ├── figures/
 ├── data_gen.cpp
 ├── machine_learning.ipynb

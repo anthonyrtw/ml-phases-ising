@@ -4,23 +4,30 @@
 #include <random>
 #include <cmath>
 #include <string>
+#include <filesystem>
 #include <torch/torch.h>
 
 // Constants
-const std::string shape = "square"; // or "triangular";
-const int L = 10;
-const int EquilibrationSteps = 50000;
+const std::string shape = "triangular";
+const int L = 60;
+const int EquilibrationSteps = 4 * L * L;
 const float J = 1.0;
-const int numT = 42;  
-const float minT = 1.0, maxT = 3.5; 
-const int numRuns = 100;
 
-// Initialize lattice with +1 spins
+// Evaluate lattices around the critical temperature in the thermodynamic limit
+const float criticalTemp = (shape == "square") ? (2.0f / log(1 + sqrt(2))) : (4.0f / log(3));
+const int numT = 40;
+const float minT = criticalTemp - 2.0, maxT = criticalTemp + 2.0;
+
+// For each temperature we generate numRuns many lattices
+const int numRuns = 3; 
+
+// Initialize lattice with +1 or -1 spins
 torch::Tensor initializeLattice(int L) {
-    return 2 * torch::randint(0, 2, {L, L}) - 1;
+    torch::Tensor startSpin = 2 * torch::randint(0, 2, {1}, torch::kInt32) - 1;
+    return startSpin.item<int>() * torch::ones({L, L}, torch::kInt32);
 }
 
-// Calculates change in energy if a spin flip occurs at lattice site (x, y)
+// Calculates change in energy if a spin flip occurs at lattice site (x, y) for square lattice
 float deltaEnergySquare(torch::Tensor& lattice, float J, int x, int y) {
     int spin = lattice.index({x, y}).item<int>();
     int spin_right = lattice.index({(x + 1 + L) % L, y}).item<int>();
@@ -30,7 +37,7 @@ float deltaEnergySquare(torch::Tensor& lattice, float J, int x, int y) {
     return 2 * J * spin * (spin_right + spin_left + spin_up + spin_down);
 }
 
-// Calculates change in energy if a spin flip occurs at lattice site (x, y)
+// Calculates change in energy if a spin flip occurs at lattice site (x, y) for triangular lattice
 float deltaEnergyTriangular(torch::Tensor& lattice, float J, int x, int y) {
     int spin = lattice.index({x, y}).item<int>();
     int spin1 = lattice.index({(x - 1 + L) % L, y}).item<int>();
@@ -89,7 +96,7 @@ int main() {
 
     torch::Tensor lattices = torch::empty({0});
     torch::Tensor magnetizations = torch::empty({0});
-    torch::Tensor temperatures = torch::linspace(minT, maxT, numT);
+    torch::Tensor temperatures = torch::linspace(minT, maxT, numT); 
 
     for (int run = 0; run < numRuns; ++run){ 
         torch::Tensor lattice = initializeLattice(L);

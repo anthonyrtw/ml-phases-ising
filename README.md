@@ -56,4 +56,4 @@ pip install -r requirements.txt
 
 ### C++
 
-The dataset is generated using a C++ script `generate_dataset.cpp`, which requires Libtorch, PyTorch's C++ library. You can follow the installation and set-up instructions for Libtorch from the [official documentation](https://pytorch.org/cppdocs/installing.html).
+The dataset is generated using a C++ script `data_gen.cpp`, which requires Libtorch, PyTorch's C++ library. You can follow the installation and set-up instructions for Libtorch from the [official documentation](https://pytorch.org/cppdocs/installing.html).
